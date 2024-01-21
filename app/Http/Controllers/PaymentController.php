@@ -14,17 +14,13 @@ class PaymentController extends Controller
         {
             $countryFilter = $request->input('country');
             $statusFilter = $request->input('status');
-
-            $payments = Payment::with(['shareholder' => function ($query) use ($countryFilter) {
-                if ($countryFilter) {
-                    $query->where('country', $countryFilter);
-                            }
-                }])
-                /* ->when($countryFilter, function ($query, $countryFilter) {
-                    return $query->where('shareholders.country', $countryFilter);
-                }) */ 
+            $payments = Payment::with('shareholder')
                 ->when($statusFilter, function ($query, $statusFilter) {
-                    return $query->where('payments.status', $statusFilter);
+                    return $query->where('status', $statusFilter);
+                })->when($countryFilter, function ($query, $countryFilter) {
+                    return $query->whereHas('shareholder', function ($subquery) use ($countryFilter) {
+                        $subquery->where('country', $countryFilter);
+                    });
                 })
                 ->paginate(25);
 

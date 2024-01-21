@@ -25,7 +25,7 @@
         
         <div class="card-body">
             <form action="{{ route('all-payments') }}" method="GET">
-            <div class="filter row m-2">
+            <div class="filter row m-2 mb-4">
                 
                 
                     <div class="col-md-3">
@@ -51,9 +51,11 @@
                 </div>
             </div>
             </form>
-          <table class="table table-bordered">
+          <table class="table table-bordered mt-2">
         <tr>
-            <th>No</th>            
+            <th>No</th>
+            <th>Share Holder</th>
+            <th>Country</th>            
             <th>Due Date</th>
             <th>Installment Amount</th>
             <th>Payment Date</th>
@@ -65,6 +67,16 @@
         @foreach ($payments as $payment)
             <tr>
                 <td>{{ $loop->iteration}}</td>
+                <td >@if ($payment->shareholder)
+                    <strong>{{ $payment->shareholder->name }}</strong>
+                <br/>{{ $payment->shareholder->email }} <br />
+                    Mob: {{ $payment->shareholder->mobile }}
+                    @endif
+                </td>
+                <td >@if ($payment->shareholder)
+                    {{ $payment->shareholder->country }}
+                     @endif
+                </td>
                 <td >{{ $payment->due_date }}</td>
                 <td >{{ $payment->installment_amount }}</td>
                 <td class="payment-date" >{{ $payment->payment_date }}</td>

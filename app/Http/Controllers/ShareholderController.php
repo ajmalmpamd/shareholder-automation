@@ -14,7 +14,7 @@ class ShareholderController extends Controller
      */
     public function index()
     {
-        $rows = Shareholder::latest()->paginate(2);
+        $rows = Shareholder::latest()->paginate(25);
     
         return view('shareholders.index',compact('rows'));
     
@@ -101,7 +101,9 @@ class ShareholderController extends Controller
     public function create_payments($eid)
     {     
         $shareholder = Shareholder::findOrFail(decrypt($eid));
-
+         if ($shareholder->installment_type){
+            return redirect()->route('shareholders.payments',encrypt($shareholder->id));
+         }
         return view('shareholders.create_payments', compact('shareholder'));
    
     }
